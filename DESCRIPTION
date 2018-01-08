@@ -1,0 +1,12 @@
+Package: WVPU
+Type: Package
+Title: BUSN2750: Introduction to Statistics
+Version: 0.1.0
+Author: David Gabauer
+Maintainer: David Gabauer <david.gabauer@webster.ac.at>
+Description: This package provides essential functions for BUSN 2750
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Dependents: 
+  stats (>= 1.0.1)
