@@ -1,1 +1,79 @@
-exportPattern("^[[:alpha:]]+")
+importFrom("stats", "aggregate", "dbeta", "dsignrank", "dt",
+             "dweibull", "dwilcox", "integrate", "rbinom")
+importFrom("utils", "combn")
+importFrom("fAsianOptions", "kummerM", "kummerU")
+importFrom("combinat", "permn")
+
+# Export all names
+exportPattern(".")
+export(
+addrv,
+cards,
+cfbeta,
+cfbinom,
+cfcauchy,
+cfchisq,
+cfexp,
+cff,
+cfgamma,
+cfgeom,
+cfhyper,
+cflnorm,
+cflogis,
+cfnbinom,
+cfnorm,
+cfpois,
+cfsignrank,
+cft,
+cfunif,
+cfweibull,
+cfwilcox,
+countrep,
+empirical,
+euchredeck,
+iidspace,
+intersect,
+is.probspace,
+isin,
+isrep,
+marginal,
+noorder,
+nsamp,
+permsn,
+prob,
+Prob,
+probspace,
+rolldie,
+roulette,
+setdiff,
+sim,
+subset,
+tosscoin,
+union,
+urnsamples)
+
+S3method(union, default)
+S3method(union, data.frame)
+S3method(union, ps)
+S3method(intersect, default)
+S3method(intersect, data.frame)
+S3method(intersect, ps)
+S3method(setdiff, default)
+S3method(setdiff, data.frame)
+S3method(setdiff, ps)
+S3method(urnsamples, default)
+S3method(urnsamples, data.frame)
+S3method(probspace, default)
+S3method(probspace, list)
+S3method(Prob, default)
+S3method(Prob, ps)
+S3method(isin, default)
+S3method(isin, data.frame)
+S3method(isrep, default)
+S3method(isrep, data.frame)
+S3method(countrep, default)
+S3method(countrep, data.frame)
+S3method(subset, ps)
+S3method(sim, default)
+S3method(sim, ps)
+
