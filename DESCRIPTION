@@ -1,12 +1,8 @@
 Package: WVPU
 Version: 0.1
+Author: David Gabauer
+Maintainer: David Gabauer <david.gabauer@webster.ac.at>
 Title: BUSN2750: Introduction to Statistics
-Authors@R: 
 Depends: combinat
-Description: Essential
+Description: Introduction to Statistics
 License: GPL (>= 3)
-NeedsCompilation: no
-Author: G. Jay Kerns
-Maintainer: -
-Repository: CRAN
-Date/Publication: 2017-02-16 07:13:39

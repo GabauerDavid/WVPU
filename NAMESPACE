@@ -1,7 +1,4 @@
-importFrom("stats", "aggregate", "dbeta", "dsignrank", "dt",
-             "dweibull", "dwilcox", "integrate", "rbinom")
 importFrom("utils", "combn")
-importFrom("fAsianOptions", "kummerM", "kummerU")
 importFrom("combinat", "permn")
 
 # Export all names
@@ -9,29 +6,7 @@ exportPattern(".")
 export(
 addrv,
 cards,
-cfbeta,
-cfbinom,
-cfcauchy,
-cfchisq,
-cfexp,
-cff,
-cfgamma,
-cfgeom,
-cfhyper,
-cflnorm,
-cflogis,
-cfnbinom,
-cfnorm,
-cfpois,
-cfsignrank,
-cft,
-cfunif,
-cfweibull,
-cfwilcox,
 countrep,
-empirical,
-euchredeck,
-iidspace,
 intersect,
 is.probspace,
 isin,
@@ -46,7 +21,6 @@ probspace,
 rolldie,
 roulette,
 setdiff,
-sim,
 subset,
 tosscoin,
 union,
@@ -74,6 +48,3 @@ S3method(isrep, data.frame)
 S3method(countrep, default)
 S3method(countrep, data.frame)
 S3method(subset, ps)
-S3method(sim, default)
-S3method(sim, ps)
-
