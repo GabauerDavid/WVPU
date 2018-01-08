@@ -1,30 +1,9 @@
-`permsn` <- function (x, m) {
+`Prob` <- function (x, ...)
+  UseMethod("Prob")
 
-  if (is.numeric(x) && length(x) == 1 && x > 0 && trunc(x) == x)
-
-    combn
-  x <- seq(x)
-  temp <- combn(x, m)
-  if ( isTRUE(all.equal(m,1)) ) {
-
-    P <- temp
-  } else if (isTRUE(all.equal(m, length(x)))) {
-
-    temp <- matrix(x, ncol = 1)
-    P <- array(unlist(permn(temp[, 1])), dim = c(m, factorial(m)))
-  } else {
-    k <- dim(temp)[1]
-    n <- dim(temp)[2]
-    P <- array(unlist(permn(temp[, 1])), dim = c(k, factorial(k)))
-    for (i in 2:n) {
-      a <- temp[, i]
-      perms <- array(unlist(permn(a)), dim = c(k, factorial(k)))
-      P <- cbind(P, perms)
-    }
-
-
-  }
-  return(P)
+`prob` <- function (x, ...){
+  message("'prob' is deprecated; use 'Prob' instead.")
+  Prob(x, ...)
 }
 
 `Prob.default` <- function (x, event = NULL, given = NULL, ...){
@@ -68,6 +47,7 @@
   }
   return(p)
 }
+
 
 `Prob.ps` <- function (x, event = NULL, given = NULL, ...){
   if (is.null(x$probs)) {
@@ -115,42 +95,9 @@
   return(p)
 }
 
-`intersect.data.frame` <- function (x, y, ...){
-  a <- do.call("paste", c(x, sep = "\r"))
-  b <- do.call("paste", c(y, sep = "\r"))
-  x[match(intersect(a, b), a), ]
-}
 
-`intersect.default` <- function (x, y, ...){
-  y <- as.vector(y)
-  unique(y[match(as.vector(x), y, 0)])
-}
 
-`intersect.ps` <- function (x, y, ...){
-  a <- do.call("paste", c(x, sep = "\r"))
-  b <- do.call("paste", c(y, sep = "\r"))
-  e <- match(intersect(a, b), a)
-  res <- list(outcomes = x$outcomes[e], probs = x$probs[e])
-  class(res) <- c("ps", "list")
-  return(res)
-}
-
-cards = function (jokers = FALSE, makespace = FALSE) {
-  x <- c(2:10, "J", "Q", "K", "A")
-  y <- c("Club", "Diamond", "Heart", "Spade")
-  res <- expand.grid(rank = x, suit = y)
-  if (jokers) {
-    levels(res$rank) <- c(levels(res$rank), "Joker")
-    res <- rbind(res, data.frame(rank = c("Joker", "Joker"),
-                                 suit = c(NA, NA)))
-  }
-  if (makespace) {
-    res$probs <- rep(1, dim(res)[1])/dim(res)[1]
-  }
-  return(res)
-}
-
-nsamp = function (n, k, replace = FALSE, ordered = FALSE) {
+`nsamp` <- function (n, k, replace = FALSE, ordered = FALSE){
   m <- length(n)
   if (length(k) != m)
     stop("number of urns doesn't equal number of sample sizes")
@@ -180,7 +127,74 @@ nsamp = function (n, k, replace = FALSE, ordered = FALSE) {
   return(res)
 }
 
-rolldie = function (times, nsides = 6, makespace = FALSE) {
+
+
+`permsn` <- function (x, m)
+{
+
+  # require(combinat)
+  if (is.numeric(x) && length(x) == 1 && x > 0 && trunc(x) == x)
+
+    x <- seq(x)
+  temp <- combn(x, m)
+  if ( isTRUE(all.equal(m,1)) ) {
+
+    P <- temp
+  } else if (isTRUE(all.equal(m, length(x)))) {
+
+    temp <- matrix(x, ncol = 1)
+    P <- array(unlist(permn(temp[, 1])), dim = c(m, factorial(m)))
+  } else {
+    k <- dim(temp)[1]
+    n <- dim(temp)[2]
+    P <- array(unlist(permn(temp[, 1])), dim = c(k, factorial(k)))
+    for (i in 2:n) {
+      a <- temp[, i]
+      perms <- array(unlist(permn(a)), dim = c(k, factorial(k)))
+      P <- cbind(P, perms)
+    }
+
+
+  }
+  return(P)
+}
+
+
+
+
+`cards` <- function (jokers = FALSE, makespace = FALSE){
+  x <- c(2:10, "J", "Q", "K", "A")
+  y <- c("Club", "Diamond", "Heart", "Spade")
+  res <- expand.grid(rank = x, suit = y)
+  if (jokers) {
+    levels(res$rank) <- c(levels(res$rank), "Joker")
+    res <- rbind(res, data.frame(rank = c("Joker", "Joker"),
+                                 suit = c(NA, NA)))
+  }
+  if (makespace) {
+    res$probs <- rep(1, dim(res)[1])/dim(res)[1]
+  }
+  return(res)
+}
+
+
+`euchredeck` <- function (benny = FALSE, makespace = FALSE){
+  x <- c(9:10, "J", "Q", "K", "A")
+  y <- c("Club", "Diamond", "Heart", "Spade")
+  res <- expand.grid(value = x, suit = y)
+  if (benny) {
+    levels(res$value) <- c(levels(res$value), "Joker")
+    res <- rbind(res, data.frame(value = c("Joker"), suit = NA))
+  }
+  if (makespace) {
+    res$probs <- rep(1, dim(res)[1])/dim(res)[1]
+  }
+  return(res)
+}
+
+
+
+`rolldie` <- function (times, nsides = 6, makespace = FALSE){
   temp = list()
   for (i in 1:times) {
     temp[[i]] <- 1:nsides
@@ -192,7 +206,9 @@ rolldie = function (times, nsides = 6, makespace = FALSE) {
   return(res)
 }
 
-roulette = function (european = FALSE, makespace = FALSE) {
+
+
+`roulette` <- function (european = FALSE, makespace = FALSE){
   if (european) {
     num = c("0", "26", "3", "35", "12", "28", "7", "29",
             "18", "22", "9", "31", "14", "20", "1", "33", "16",
@@ -200,13 +216,15 @@ roulette = function (european = FALSE, makespace = FALSE) {
             "27", "6", "34", "17", "25", "2", "21", "4", "19",
             "15", "32")
     color <- c("Green", rep(c("Black", "Red"), 18))
-  } else {
+  }
+  else {
     num = c("27", "10", "25", "29", "12", "8", "19", "31",
             "18", "6", "21", "33", "16", "4", "23", "35", "14",
             "2", "0", "28", "9", "26", "30", "11", "7", "20",
             "32", "17", "5", "22", "34", "15", "3", "24", "36",
             "13", "1", "00")
-    color <- c(rep(c("Red", "Black"), 9), "Green", rep(c("Black","Red"), 9), "Green")
+    color <- c(rep(c("Red", "Black"), 9), "Green", rep(c("Black",
+                                                         "Red"), 9), "Green")
   }
   res <- data.frame(num = num, color = color)
   if (makespace) {
@@ -215,7 +233,9 @@ roulette = function (european = FALSE, makespace = FALSE) {
   return(res)
 }
 
-tosscoin = function (times, makespace = FALSE) {
+
+
+`tosscoin` <- function (times, makespace = FALSE){
   temp <- list()
   for (i in 1:times) {
     temp[[i]] <- c("H", "T")
@@ -226,6 +246,12 @@ tosscoin = function (times, makespace = FALSE) {
     res$probs <- rep(1, 2^times)/2^times
   return(res)
 }
+
+
+
+`urnsamples` <- function (x, ...)
+  UseMethod("urnsamples")
+
 
 `urnsamples.data.frame` <- function (x, size, replace = FALSE, ordered = FALSE, ...){
   nurn <- dim(x)[1]
@@ -266,6 +292,8 @@ tosscoin = function (times, makespace = FALSE) {
   return(out)
 }
 
+
+
 `urnsamples.default` <- function (x, size, replace = FALSE, ordered = FALSE, ...){
   nurn <- length(x)
   if (isTRUE(replace)) {
@@ -303,9 +331,39 @@ tosscoin = function (times, makespace = FALSE) {
   return(data.frame(out))
 }
 
+
+
+`countrep` <- function (x, ...)
+  UseMethod("countrep")
+
+`countrep.data.frame` <- function (x, ...){
+  apply(x, MARGIN = 1, FUN = countrep, ...)
+}
+
+
+`countrep.default` <- function (x, vals = unique(x), nrep = 2, ...){
+  res <- 0
+  if (length(x) >= nrep) {
+    for (i in 1:length(vals)) {
+      if (sum(mapply(all.equal, x, vals[i]) == TRUE) ==
+          nrep) {
+        res <- res + 1
+      }
+    }
+  }
+  return(res)
+}
+
+
+`isin` <- function (x, ...)
+  UseMethod("isin")
+
+
+
 `isin.data.frame` <- function (x, ...){
   apply(x, MARGIN = 1, FUN = isin, ...)
 }
+
 
 `isin.default` <- function (x, y, ordered = FALSE, ...){
   res <- (length(y) <= length(x))
@@ -329,9 +387,17 @@ tosscoin = function (times, makespace = FALSE) {
   return(res)
 }
 
+
+
+`isrep` <- function (x, ...)
+  UseMethod("isrep")
+
+
 `isrep.data.frame` <- function (x, ...){
   apply(x, MARGIN = 1, FUN = isrep, ...)
 }
+
+
 
 `isrep.default` <- function (x, vals = unique(x), nrep = 2, ...){
   res <- FALSE
@@ -347,135 +413,7 @@ tosscoin = function (times, makespace = FALSE) {
   return(res)
 }
 
-`iidspace` <- function (x, ntrials, probs = NULL){
-  temp = list()
-  for (i in 1:ntrials) {
-    temp[[i]] <- x
-  }
-  res <- expand.grid(temp, KEEP.OUT.ATTRS = FALSE)
-  if (is.null(probs)) {
-    res$probs <- rep(1/dim(res)[1], dim(res)[1])
-  }
-  else {
-    if (!identical(length(x), length(probs))) {
-      stop("'probs' is not the same length as 'outcomes'")
-    }
-    if (any(probs < 0)) {
-      stop("'probs' contains negative values")
-    }
-    probs <- probs/sum(probs)
-    ptemp = list()
-    for (i in 1:ntrials) {
-      ptemp[[i]] <- probs
-    }
-    pdf <- expand.grid(ptemp, KEEP.OUT.ATTRS = FALSE)
-    pres <- apply(pdf, 1, prod)
-    res$probs <- pres
-  }
-  names(res) <- c(paste(rep("X", ntrials), 1:ntrials, sep = ""),
-                  "probs")
-  return(res)
-}
 
-`is.probspace` <- function (x){
-  if (any(class(x) == "ps"))
-    return(TRUE)
-  if (!is.data.frame(x) | is.null(x$probs))
-    return(FALSE)
-  if (any(x$probs < 0))
-    return(FALSE)
-  return(TRUE)
-}
-
-`probspace.default` <- function (x, probs, ...){
-  y <- data.frame(x)
-  if (missing(probs)) {
-    y$probs <- rep(1, dim(y)[1])/dim(y)[1]
-  }
-  else {
-    if (any(probs < 0)) {
-      stop("'probs' contains negative values")
-    }
-    y$probs <- probs/sum(probs)
-  }
-  return(y)
-}
-
-`probspace.list` <- function (x, probs, ...){
-  y <- x
-  if (missing(probs)) {
-    probs <- rep(1, length(y))/length(y)
-  }
-  else {
-    if (any(probs < 0)) {
-      stop("'probs' contains negative values")
-    }
-    probs <- probs/sum(probs)
-  }
-  res <- list(outcomes = y, probs = probs)
-  class(res) <- c("ps", "list")
-  return(res)
-}
-
-`setdiff.data.frame` <- function (x, y, ...){
-  a <- do.call("paste", c(x, sep = "\r"))
-  b <- do.call("paste", c(y, sep = "\r"))
-  x[match(setdiff(a, b), a), ]
-}
-
-`setdiff.default` <- function (x, y, ...){
-  x <- as.vector(x)
-  y <- as.vector(y)
-  unique(if (length(x) || length(y))
-    x[match(x, y, 0) == 0]
-    else x)
-}
-
-`setdiff.ps` <- function (x, y, ...){
-  a <- do.call("paste", c(x, sep = "\r"))
-  b <- do.call("paste", c(y, sep = "\r"))
-  e <- match(setdiff(a, b), a)
-  res <- list(outcomes = x$outcomes[e], probs = x$probs[e])
-  class(res) <- c("ps", "list")
-  return(res)
-}
-
-`subset.ps` <- function (x, subset, ...){
-  e <- substitute(subset)
-  r <- sapply(x$outcomes, function(t) {
-    eval(e, t)
-  })
-  if (!is.logical(r))
-    stop("'subset' must be logical")
-  res <- list(outcomes = x$outcomes[r & !is.na(r)], probs = x$probs[r &
-                                                                      !is.na(r)])
-  class(res) <- c("ps", "list")
-  return(res)
-}
-
-`union.data.frame` <- function (x, y, ...){
-  res <- unique(rbind(as.data.frame(y), x))
-  res[order(as.numeric(rownames(res))), ]
-}
-
-`union.default` <- function (x, y, ...) {
-  unique(c(as.vector(x), as.vector(y)))
-}
-
-`union.ps` <- function (x, y, ...){
-  na <- length(x$outcomes)
-  nb <- length(y$outcomes)
-  temp <- x
-  for (i in 1:nb) {
-    temp$outcomes[[na + i]] <- y$outcomes[[i]]
-    temp$probs[[na + i]] <- y$probs[[i]]
-  }
-  a <- do.call("paste", c(temp, sep = "\r"))
-  e <- !duplicated(a)
-  res <- list(outcomes = temp$outcomes[e], probs = temp$probs[e])
-  class(res) <- c("ps", "list")
-  return(res)
-}
 
 `addrv` <- function (space, FUN = NULL, invars = NULL, name = NULL, ...){
   if (any(class(space) == "ps"))
@@ -505,6 +443,8 @@ tosscoin = function (times, makespace = FALSE) {
   return(val)
 }
 
+
+
 `marginal` <- function (space, vars = NULL){
   if (!is.data.frame(space) | is.null(space$probs)) {
     message("'space' is not a proper probability space")
@@ -526,6 +466,7 @@ tosscoin = function (times, makespace = FALSE) {
   names(res) <- c(vars, "probs")
   return(res)
 }
+
 
 `noorder` <- function (space){
   if (!is.data.frame(space)) {
@@ -550,5 +491,112 @@ tosscoin = function (times, makespace = FALSE) {
     res <- aggregate(res$probs, by = as.list(sA), sum)
     names(res) <- c(n, "probs")
   }
+  return(res)
+}
+
+
+
+
+`intersect` <- function (x, ...)
+  UseMethod("intersect")
+
+
+`intersect.data.frame` <- function (x, y, ...){
+  a <- do.call("paste", c(x, sep = "\r"))
+  b <- do.call("paste", c(y, sep = "\r"))
+  x[match(intersect(a, b), a), ]
+}
+
+
+
+`intersect.default` <- function (x, y, ...){
+  y <- as.vector(y)
+  unique(y[match(as.vector(x), y, 0)])
+}
+
+
+
+`intersect.ps` <- function (x, y, ...){
+  a <- do.call("paste", c(x, sep = "\r"))
+  b <- do.call("paste", c(y, sep = "\r"))
+  e <- match(intersect(a, b), a)
+  res <- list(outcomes = x$outcomes[e], probs = x$probs[e])
+  class(res) <- c("ps", "list")
+  return(res)
+}
+
+
+
+`setdiff` <- function (x, ...)
+  UseMethod("setdiff")
+
+
+`setdiff.data.frame` <- function (x, y, ...){
+  a <- do.call("paste", c(x, sep = "\r"))
+  b <- do.call("paste", c(y, sep = "\r"))
+  x[match(setdiff(a, b), a), ]
+}
+
+
+`setdiff.default` <- function (x, y, ...){
+  x <- as.vector(x)
+  y <- as.vector(y)
+  unique(if (length(x) || length(y))
+    x[match(x, y, 0) == 0]
+    else x)
+}
+
+
+`setdiff.ps` <- function (x, y, ...){
+  a <- do.call("paste", c(x, sep = "\r"))
+  b <- do.call("paste", c(y, sep = "\r"))
+  e <- match(setdiff(a, b), a)
+  res <- list(outcomes = x$outcomes[e], probs = x$probs[e])
+  class(res) <- c("ps", "list")
+  return(res)
+}
+
+
+`subset.ps` <- function (x, subset, ...){
+  e <- substitute(subset)
+  r <- sapply(x$outcomes, function(t) {
+    eval(e, t)
+  })
+  if (!is.logical(r))
+    stop("'subset' must be logical")
+  res <- list(outcomes = x$outcomes[r & !is.na(r)], probs = x$probs[r &
+                                                                      !is.na(r)])
+  class(res) <- c("ps", "list")
+  return(res)
+}
+
+
+`union` <- function (x, ...)
+  UseMethod("union")
+
+
+`union.data.frame` <- function (x, y, ...){
+  res <- unique(rbind(as.data.frame(y), x))
+  res[order(as.numeric(rownames(res))), ]
+}
+
+
+
+`union.default` <- function (x, y, ...)
+  unique(c(as.vector(x), as.vector(y)))
+
+
+`union.ps` <- function (x, y, ...){
+  na <- length(x$outcomes)
+  nb <- length(y$outcomes)
+  temp <- x
+  for (i in 1:nb) {
+    temp$outcomes[[na + i]] <- y$outcomes[[i]]
+    temp$probs[[na + i]] <- y$probs[[i]]
+  }
+  a <- do.call("paste", c(temp, sep = "\r"))
+  e <- !duplicated(a)
+  res <- list(outcomes = temp$outcomes[e], probs = temp$probs[e])
+  class(res) <- c("ps", "list")
   return(res)
 }
