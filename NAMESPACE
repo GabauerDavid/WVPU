@@ -7,7 +7,6 @@ export(
 addrv,
 cards,
 countrep,
-intersect,
 is.probspace,
 isin,
 isrep,
@@ -20,21 +19,10 @@ Prob,
 probspace,
 rolldie,
 roulette,
-setdiff,
 subset,
 tosscoin,
-union,
 urnsamples)
 
-S3method(union, default)
-S3method(union, data.frame)
-S3method(union, ps)
-S3method(intersect, default)
-S3method(intersect, data.frame)
-S3method(intersect, ps)
-S3method(setdiff, default)
-S3method(setdiff, data.frame)
-S3method(setdiff, ps)
 S3method(urnsamples, default)
 S3method(urnsamples, data.frame)
 S3method(probspace, default)
